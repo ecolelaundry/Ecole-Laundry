@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ecolé — Premium Laundry Care | Coming Soon</title>
+
+  <!-- Favicon: inline SVG of the hanger+leaf mark in Ecolé green -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F5F0E8'/%3E%3Cpath d='M32 10 C32 10 28 10 28 14 C28 17 30 18 32 19 L10 36 Q8 37 10 39 L54 39 Q56 37 54 36 L34 20 C38 18 38 10 32 10 Z' fill='none' stroke='%236B7F6E' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M38 32 Q42 28 44 32 Q46 36 42 37' fill='%236B7F6E' opacity='0.7'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       TOKENS & RESET
+    ============================================= */
+    :root {
+      --cream:        #F5F0E8;
+      --cream-dark:   #EDE7D6;
+      --cream-mid:    #E8E0CC;
+      --gray-green:   #6B7F6E;
+      --gray-green-dk:#4D5E50;
+      --gray-green-lt:#A8BAA8;
+      --sage:         #8FA68F;
+      --orange-lt:    #E8A97E;
+      --orange-warm:  #D4845A;
+      --charcoal:     #2E2E2A;
+      --text-mid:     #5A5A54;
+      --text-light:   #8A8A82;
+      --white:        #FFFFFF;
+      --radius-sm:    8px;
+      --radius-md:    16px;
+      --radius-lg:    28px;
+      --shadow-soft:  0 4px 24px rgba(75,90,78,0.10);
+      --shadow-card:  0 8px 40px rgba(75,90,78,0.13);
+      --transition:   0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    /* =============================================
+       TYPOGRAPHY
+    ============================================= */
+    h1, h2, h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; line-height: 1.1; }
+    h1 { font-size: clamp(2.4rem, 4.5vw, 3.8rem); }
+    h2 { font-size: clamp(2.2rem, 4vw, 3.4rem); }
+    h3 { font-size: clamp(1.5rem, 2.5vw, 2.1rem); }
+    p  { font-size: clamp(1.05rem, 1.5vw, 1.18rem); line-height: 1.55; margin-bottom: 0; }
+
+    /* Section headline override — bigger for standalone section titles */
+    .section-title { font-size: clamp(2.6rem, 5vw, 4rem) !important; margin-bottom: 10px; }
+    .about-title   { font-size: clamp(2.4rem, 4.2vw, 3.4rem); }
+
+    /* =============================================
+       LAYOUT UTILITIES
+    ============================================= */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .section-pad { padding: 64px 0; }
+    .text-center { text-align: center; }
+
+    /* =============================================
+       NAVBAR
+    ============================================= */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 8px 0;
+      background: rgba(53,40,30,0.95);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      transition: var(--transition);
+    }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; }
+    .navbar-logo img {
+      height: 92px; width: auto;
+      mix-blend-mode: normal;
+      filter: brightness(0) invert(1);
+    }
+    .navbar-cta {
+      display: inline-block;
+      padding: 10px 26px;
+      background: var(--orange-lt);
+      color: var(--white);
+      border-radius: 100px;
+      font-size: 0.95rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: var(--transition);
+    }
+    .navbar-cta:hover { background: var(--orange-warm); }
+
+    /* =============================================
+       HERO + LEAD FORM
+    ============================================= */
+    .hero {
+      min-height: 100vh;
+      padding-top: 110px;
+      padding-bottom: 32px;
+      background: var(--cream);
+      display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+
+    /* ---- Floating laundry ornaments (SVG inline) ---- */
+    .hero-ornaments { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    /* Bubbles */
+    .bubble {
+      position: absolute; border-radius: 50%;
+      border: 2px solid rgba(107,127,110,0.18);
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.6), rgba(107,127,110,0.04));
+      animation: floatBubble linear infinite;
+    }
+    .bubble:nth-child(1) { width:60px;height:60px; left:5%;  top:20%; animation-duration:9s;  animation-delay:0s;   opacity:0.7; }
+    .bubble:nth-child(2) { width:36px;height:36px; left:12%; top:65%; animation-duration:12s; animation-delay:2s;   opacity:0.5; }
+    .bubble:nth-child(3) { width:80px;height:80px; left:88%; top:15%; animation-duration:11s; animation-delay:1s;   opacity:0.55; }
+    .bubble:nth-child(4) { width:24px;height:24px; left:80%; top:70%; animation-duration:8s;  animation-delay:3s;   opacity:0.6; }
+    .bubble:nth-child(5) { width:48px;height:48px; left:50%; top:85%; animation-duration:14s; animation-delay:0.5s; opacity:0.45; }
+    @keyframes floatBubble {
+      0%   { transform: translateY(0) scale(1); }
+      50%  { transform: translateY(-18px) scale(1.04); }
+      100% { transform: translateY(0) scale(1); }
+    }
+    /* Hanger SVG ornament top-right */
+    .orn-hanger {
+      position: absolute; top: 48px; right: 6%;
+      width: 110px; opacity: 0.13;
+      animation: sway 6s ease-in-out infinite;
+    }
+    @keyframes sway {
+      0%,100% { transform: rotate(-4deg); }
+      50%     { transform: rotate(4deg); }
+    }
+    /* Wavy line / steam ornament */
+    .orn-steam {
+      position: absolute; bottom: 10%; left: 2%;
+      opacity: 0.1; animation: riseSteam 7s ease-in-out infinite;
+    }
+    @keyframes riseSteam {
+      0%,100% { transform: translateY(0) scaleX(1); opacity: 0.1; }
+      50%     { transform: translateY(-12px) scaleX(1.05); opacity: 0.18; }
+    }
+    /* Dot grid accent */
+    .orn-dots {
+      position: absolute; top: 18%; left: 2%;
+      width: 90px; height: 90px;
+      background-image: radial-gradient(circle, rgba(107,127,110,0.25) 1.5px, transparent 1.5px);
+      background-size: 14px 14px;
+      opacity: 0.5;
+    }
+    .orn-dots-2 {
+      position: absolute; bottom: 14%; right: 3%;
+      width: 70px; height: 70px;
+      background-image: radial-gradient(circle, rgba(232,169,126,0.35) 1.5px, transparent 1.5px);
+      background-size: 12px 12px;
+      opacity: 0.6;
+    }
+
+    .hero .container {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 40px; align-items: center;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gray-green);
+      background: rgba(107,127,110,0.1);
+      padding: 6px 14px; border-radius: 100px; margin-bottom: 24px;
+    }
+    .hero-eyebrow span { width: 6px; height: 6px; background: var(--orange-lt); border-radius: 50%; }
+    .hero-title { margin-bottom: 12px; color: var(--charcoal); line-height: 1.08; }
+    .hero-title em { font-style: italic; color: var(--gray-green); }
+    .hero-subtitle {
+      font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+      color: var(--text-mid); margin-bottom: 20px;
+      max-width: 420px; line-height: 1.6;
+    }
+    /* 2×3 badge grid — 6 badges, 2 per row */
+    .hero-badges {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      max-width: 420px;
+      margin-bottom: 4px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.05em;
+      color: var(--gray-green-dk);
+      border: 1px solid rgba(107,127,110,0.3);
+      padding: 7px 14px; border-radius: 100px;
+      background: rgba(107,127,110,0.06);
+      white-space: nowrap;
+      justify-content: center;
+    }
+    .badge::before {
+      content: '';
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gray-green-lt); flex-shrink: 0;
+    }
+    /* Last 2 badges: highlight */
+    .badge.badge-highlight {
+      grid-column: span 1;
+      font-size: 0.88rem; font-weight: 700;
+      color: var(--gray-green-dk);
+      border: 2px solid var(--gray-green);
+      background: rgba(107,127,110,0.12);
+      padding: 10px 14px;
+    }
+    .badge.badge-highlight::before {
+      background: var(--orange-warm);
+      width: 6px; height: 6px;
+    }
+
+    .offer-strip {
+      background: var(--cream-dark);
+      border-top: 1px solid rgba(107,127,110,0.12);
+      border-bottom: 1px solid rgba(107,127,110,0.12);
+      padding: 20px 0;
+    }
+    .offer-strip-inner {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .offer-strip-label { display: none; }
+    .offer-strip-cta {
+      flex-shrink: 0;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--gray-green-dk);
+      border: 1.5px solid var(--gray-green);
+      padding: 8px 18px; border-radius: 100px;
+      transition: var(--transition); white-space: nowrap;
+    }
+    .offer-strip-cta:hover { background: var(--gray-green); color: var(--cream); }
+    .hero-offers {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      min-width: 0;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      border: 1.5px solid rgba(107,127,110,0.2);
+      box-shadow: 0 4px 20px rgba(75,90,78,0.1);
+      overflow: hidden;
+    }
+    .offer-card {
+      flex: 1;          /* both cards same width */
+      border-radius: 0;
+      padding: 12px 16px;
+      padding-right: 60px; /* room for the tag */
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .offer-card.offer-primary {
+      background: linear-gradient(145deg, var(--gray-green) 0%, var(--gray-green-dk) 100%);
+      color: var(--cream);
+    }
+    .offer-card.offer-secondary {
+      background: var(--white);
+    }
+    /* Vertical "or" divider */
+    .offer-divider {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 0;
+      width: 28px;
+      flex-shrink: 0;
+      background: var(--white);
+    }
+    .offer-divider::before,
+    .offer-divider::after {
+      content: ''; flex: 1; width: 1px;
+      background: rgba(107,127,110,0.2);
+    }
+    .offer-divider span {
+      font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--text-light);
+    }
+    .offer-icon { display: none; }
+    .offer-body { flex: 1; }
+    .offer-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 2px;
+      opacity: 0.75;
+    }
+    .offer-card.offer-primary .offer-label { color: var(--gray-green-lt); }
+    .offer-card.offer-secondary .offer-label { color: var(--gray-green); }
+    /* Big punchy number */
+    .offer-number {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.4rem; font-weight: 700; line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .offer-card.offer-primary .offer-number { color: #FFD580; }
+    .offer-card.offer-secondary .offer-number { color: var(--orange-warm); }
+    .offer-subline {
+      font-size: 0.78rem; line-height: 1.35; margin-top: 3px;
+    }
+    .offer-card.offer-primary .offer-subline { color: rgba(245,240,232,0.8); }
+    .offer-card.offer-secondary .offer-subline { color: var(--text-mid); }
+    .offer-tag {
+      position: absolute; top: 8px; right: 8px;
+      background: var(--orange-lt); color: var(--white);
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 2px 7px;
+      border-radius: 100px;
+    }
+
+    /* LEAD FORM CARD */
+    .lead-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 44px 40px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(107,127,110,0.1);
+      position: relative;
+    }
+    .lead-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--gray-green), var(--orange-lt));
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    /* small hanger ornament inside card */
+    .lead-card-orn {
+      position: absolute; bottom: 20px; right: 20px;
+      opacity: 0.07; width: 64px;
+    }
+    .lead-eyebrow {
+      font-size: 0.88rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--orange-warm); margin-bottom: 10px;
+    }
+    .lead-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+      font-weight: 500; line-height: 1.1;
+      color: var(--charcoal); margin-bottom: 8px;
+    }
+    .lead-desc {
+      font-size: 1rem; color: var(--text-mid);
+      margin-bottom: 28px; line-height: 1.6;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--gray-green-dk); margin-bottom: 7px;
+    }
+    .form-group input {
+      width: 100%; padding: 13px 16px;
+      border: 1.5px solid rgba(107,127,110,0.25);
+      border-radius: var(--radius-sm);
+      font-family: 'Jost', sans-serif; font-size: 1.05rem;
+      color: var(--charcoal); background: var(--cream);
+      outline: none; transition: var(--transition);
+    }
+    .form-group input::placeholder { color: var(--text-light); }
+    .form-group input:focus {
+      border-color: var(--gray-green); background: var(--white);
+      box-shadow: 0 0 0 3px rgba(107,127,110,0.12);
+    }
+    .input-prefix { position: relative; }
+    .input-prefix span {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      font-size: 0.95rem; color: var(--text-light);
+    }
+    .input-prefix input { padding-left: 36px; }
+    .btn-submit {
+      width: 100%; padding: 15px;
+      background: var(--gray-green); color: var(--cream);
+      border: none; border-radius: var(--radius-sm);
+      font-family: 'Jost', sans-serif; font-size: 0.9rem;
+      font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; cursor: pointer;
+      transition: var(--transition); margin-top: 8px;
+    }
+    .btn-submit:hover { background: var(--gray-green-dk); transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+    .btn-submit:active { transform: translateY(0); }
+    .form-note {
+      font-size: 0.74rem; color: var(--text-light);
+      text-align: center; margin-top: 12px; line-height: 1.5;
+    }
+    .form-note strong { color: var(--gray-green); }
+
+    /* Privacy policy checkbox */
+    .form-privacy {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-top: 14px; margin-bottom: 4px;
+    }
+    .form-privacy input[type="checkbox"] {
+      width: 17px; height: 17px; min-width: 17px;
+      margin-top: 2px; cursor: pointer;
+      accent-color: var(--gray-green);
+      border-radius: 4px;
+    }
+    .form-privacy label {
+      font-size: 0.78rem; color: var(--text-mid);
+      line-height: 1.55; cursor: pointer;
+      text-transform: none; letter-spacing: 0; font-weight: 400;
+      margin-bottom: 0;
+    }
+    .form-privacy label a {
+      color: var(--gray-green); text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .form-privacy label a:hover { color: var(--gray-green-dk); }
+
+    /* =============================================
+       ABOUT / PHILOSOPHY
+    ============================================= */
+    .about-section { background: var(--cream-dark); position: relative; overflow: hidden; }
+    /* washing machine ornament */
+    .about-orn-machine {
+      position: absolute; right: -60px; bottom: -40px;
+      width: 260px; opacity: 0.06; pointer-events: none;
+    }
+    .about-inner {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 72px; align-items: center;
+    }
+    .about-label {
+      font-size: 0.88rem; font-weight: 600; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--gray-green); margin-bottom: 16px;
+    }
+    .about-title { margin-bottom: 20px; }
+    .about-title em { font-style: italic; color: var(--orange-warm); }
+    .about-body { color: var(--text-mid); font-size: 1.08rem; line-height: 1.65; margin-bottom: 12px; }
+    .pillars { display: flex; flex-direction: column; gap: 16px; }
+    .pillar {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 18px 20px; background: var(--white);
+      border-radius: var(--radius-md); border-left: 3px solid var(--gray-green-lt);
+      box-shadow: 0 2px 12px rgba(75,90,78,0.07);
+    }
+    /* =============================================
+       ICON IMAGES — from Asset/ecole_15_icons_separate
+    ============================================= */
+    .icon-img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .value-icon {
+      width: 160px; height: 160px; border-radius: 18px;
+      overflow: hidden;
+      margin: 0 auto 16px;
+      background-color: transparent;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pillar-icon {
+      flex-shrink: 0; width: 52px; height: 52px; border-radius: 12px;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step-num img.icon-img {
+      width: 56px; height: 56px; object-fit: contain;
+    }
+    /* Icon untuk sub-cards (subscription) */
+    .sub-icon {
+      width: 64px; height: 64px;
+      margin: 0 auto 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sub-icon img { width: 100%; height: 100%; object-fit: contain; }
+    /* Icon untuk service cards (essential & signature) */
+    .svc-icon {
+      width: 56px; height: 56px; margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .svc-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .pillar-title { font-weight: 600; font-size: 1rem; color: var(--charcoal); margin-bottom: 3px; }
+    .pillar-text { font-size: 0.95rem; color: var(--text-mid); line-height: 1.6; }
+
+    /* =============================================
+       VALUE PROPOSITIONS
+    ============================================= */
+    .values-section { background: var(--cream); position: relative; overflow: hidden; }
+    .values-orn {
+      position: absolute; top: 40px; right: -30px;
+      opacity: 0.06; pointer-events: none; width: 200px;
+    }
+    .section-label {
+      font-size: 1.05rem; font-weight: 600; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gray-green); margin-bottom: 12px;
+    }
+    .section-subtitle {
+      color: var(--text-mid); max-width: 540px; margin: 0 auto 36px;
+      font-size: 1.05rem; line-height: 1.6;
+    }
+    .values-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .value-card {
+      background: var(--white); border-radius: var(--radius-md);
+      padding: 28px 24px;
+      border: 1px solid rgba(107,127,110,0.1);
+      box-shadow: 0 2px 16px rgba(75,90,78,0.07);
+      transition: var(--transition);
+      text-align: center;
+    }
+    .value-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); border-color: rgba(107,127,110,0.25); }
+    .value-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.3rem; font-weight: 600; color: var(--charcoal);
+    }
+
+    /* =============================================
+       PHOTO GALLERY — with logo overlay
+    ============================================= */
+    .gallery-section { background: var(--cream-dark); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .gallery-item {
+      position: relative; border-radius: var(--radius-md);
+      overflow: hidden; aspect-ratio: 4/3;
+      box-shadow: var(--shadow-card);
+    }
+    .gallery-item:first-child {
+      grid-column: span 2;
+      aspect-ratio: 16/9;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .gallery-item:hover img { transform: scale(1.05); }
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(160deg, transparent 50%, rgba(46,46,42,0.45) 100%);
+      pointer-events: none;
+    }
+    .gallery-logo {
+      position: absolute; bottom: 14px; right: 16px;
+      width: 72px; opacity: 0.92;
+      mix-blend-mode: luminosity;
+      filter: brightness(0) invert(1);
+    }
+    .gallery-caption {
+      position: absolute; bottom: 14px; left: 16px;
+      font-size: 0.82rem; font-weight: 500; letter-spacing: 0.06em;
+      color: rgba(245,240,232,0.9); text-transform: uppercase;
+    }
+
+    /* =============================================
+       SERVICES
+    ============================================= */
+    .services-section { background: var(--cream-dark); position: relative; overflow: hidden; }
+    /* bubble strip ornament */
+    .svc-bubbles {
+      position: absolute; top: 0; left: 0; right: 0; height: 6px;
+      background: repeating-linear-gradient(90deg,
+        rgba(107,127,110,0.18) 0px, rgba(107,127,110,0.18) 24px,
+        transparent 24px, transparent 40px);
+    }
+    .services-tabs {
+      display: flex; gap: 8px; justify-content: center;
+      margin-bottom: 48px; flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 24px;
+      border: 1.5px solid rgba(107,127,110,0.3);
+      border-radius: 100px;
+      font-family: 'Jost', sans-serif; font-size: 0.82rem;
+      font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      background: transparent; color: var(--text-mid); cursor: pointer;
+      transition: var(--transition);
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--gray-green); color: var(--cream); border-color: var(--gray-green);
+    }
+    .service-panel { display: none; }
+    .service-panel.active { display: block; }
+    .essential-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    /* Essential panel: satu kartu besar full-width */
+    .essential-single {
+      background: var(--white); border-radius: var(--radius-lg);
+      border: 1px solid rgba(107,127,110,0.12);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      position: relative;
+    }
+    .essential-single-header {
+      background: transparent;
+      padding: 0 0 28px 0;
+      display: flex; align-items: center; gap: 20px;
+      border-bottom: 1px solid rgba(107,127,110,0.12);
+      margin-bottom: 28px;
+    }
+    .essential-single-icon {
+      width: 72px; height: 72px; flex-shrink: 0;
+      background: transparent; border-radius: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .essential-single-icon img { width: 72px; height: 72px; object-fit: contain; filter: none; }
+    .essential-single-header-text .essential-name {
+      color: var(--gray-green-dk);
+      margin-bottom: 0;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase;
+    }
+    .essential-single-header-text h3 { display: none; }
+    .essential-single-header-text p { display: none; }
+    .essential-tiers {
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .essential-tier {
+      padding: 36px 48px;
+      border-right: 1px solid rgba(107,127,110,0.1);
+      position: relative;
+    }
+    .essential-tier:last-child { border-right: none; }
+    .essential-tier.tier-featured {
+      background: linear-gradient(135deg, #fff 60%, rgba(232,169,126,0.07));
+    }
+    .tier-badge {
+      display: inline-block;
+      background: var(--orange-lt); color: var(--white);
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 3px 10px; border-radius: 100px;
+      margin-bottom: 10px;
+    }
+    .tier-name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.8rem; font-weight: 500; color: var(--charcoal); margin-bottom: 8px;
+    }
+    .tier-desc { font-size: 0.95rem; color: var(--text-mid); line-height: 1.65; margin-bottom: 20px; }
+    .tier-divider { height: 1px; background: rgba(107,127,110,0.12); margin: 20px 0; }
+    .sig-grid { grid-template-columns: repeat(5, 1fr) !important; }
+    /* Signature single header */
+    .sig-single-header {
+      background: linear-gradient(135deg, var(--gray-green) 0%, var(--gray-green-dk) 100%);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 32px 40px;
+      display: flex; align-items: center; gap: 20px;
+      margin-bottom: 0;
+    }
+    .sig-single-icon {
+      width: 64px; height: 64px; flex-shrink: 0;
+      background: rgba(255,255,255,0.15); border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sig-single-icon img { width: 48px; height: 48px; object-fit: contain; filter: brightness(0) invert(1); }
+    .sig-single-header-text .sig-eyebrow {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gray-green-lt); margin-bottom: 4px;
+    }
+    .sig-single-header-text h3 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.8rem, 2.5vw, 2.4rem); font-weight: 500;
+      color: var(--cream); line-height: 1.1;
+    }
+    .sig-single-header-text p { color: rgba(245,240,232,0.75); font-size: 0.95rem; margin-top: 4px; }
+    .sig-cards-wrap {
+      background: var(--white);
+      border: 1px solid rgba(107,127,110,0.1);
+      border-top: none;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      box-shadow: var(--shadow-card);
+    }
+    .sig-type-card {
+      padding: 28px 20px;
+      border-right: 1px solid rgba(107,127,110,0.1);
+      display: flex; flex-direction: column; gap: 8px;
+      transition: var(--transition);
+    }
+    .sig-type-card:last-child { border-right: none; }
+    .sig-type-card:hover { background: rgba(107,127,110,0.04); }
+    .sig-type-card.sig-featured {
+      background: linear-gradient(135deg, #fff 60%, rgba(232,169,126,0.07));
+      position: relative;
+    }
+    .sig-type-feat-tag {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      background: var(--orange-lt); color: var(--white);
+      font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 3px 10px;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    }
+    .sig-type-icon { width: 44px; height: 44px; }
+    .sig-type-icon img { width: 100%; height: 100%; object-fit: contain; }
+    .sig-type-name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.25rem; font-weight: 600; color: var(--charcoal); line-height: 1.2;
+    }
+    .sig-type-items { font-size: 0.82rem; color: var(--text-mid); line-height: 1.5; }
+    .sig-type-price {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem; font-weight: 700; color: var(--gray-green-dk);
+      margin-top: auto; padding-top: 12px;
+    }
+    .sig-type-price span { font-family: 'Jost', sans-serif; font-size: 0.75rem; font-weight: 400; color: var(--text-light); }
+    .sig-type-meta { font-size: 0.75rem; color: var(--text-light); }
+    @media (max-width: 1024px) {
+      .sig-cards-wrap { grid-template-columns: repeat(3, 1fr) !important; }
+      .sig-type-card:nth-child(3) { border-right: none; }
+      .sig-type-card:nth-child(4) { border-top: 1px solid rgba(107,127,110,0.1); }
+      .sig-type-card:nth-child(5) { border-top: 1px solid rgba(107,127,110,0.1); }
+    }
+    @media (max-width: 768px) {
+      .sig-cards-wrap { grid-template-columns: repeat(2, 1fr) !important; }
+      .sig-type-card { border-right: none; border-bottom: 1px solid rgba(107,127,110,0.1); }
+      .sig-type-card:last-child { border-bottom: none; }
+    }
+    @media (max-width: 480px) {
+      .sig-cards-wrap { grid-template-columns: 1fr !important; }
+    }
+    .essential-card {
+      background: var(--white); border-radius: var(--radius-md);
+      padding: 36px 32px;
+      border: 1px solid rgba(107,127,110,0.1);
+      box-shadow: 0 2px 16px rgba(75,90,78,0.07);
+      position: relative; overflow: hidden; transition: var(--transition);
+    }
+    /* Signature cards: flex column so price stays pinned to bottom */
+    .sig-grid .essential-card {
+      display: flex;
+      flex-direction: column;
+    }
+    .sig-grid .essential-card .sig-price-block {
+      margin-top: auto;
+      padding-top: 16px;
+    }
+    .essential-card:hover { box-shadow: var(--shadow-card); transform: translateY(-3px); }
+    .essential-card.featured {
+      border-color: var(--orange-lt);
+      background: linear-gradient(135deg, #fff 60%, rgba(232,169,126,0.07));
+    }
+    /* small bubble decoration inside service card */
+    .card-bubble-orn {
+      position: absolute; bottom: -20px; right: -20px;
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 2px solid rgba(107,127,110,0.1);
+      opacity: 0.5;
+    }
+    .card-bubble-orn::before {
+      content: ''; position: absolute; bottom: 14px; right: 14px;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid rgba(107,127,110,0.1);
+    }
+    .card-badge-top {
+      position: absolute; top: 20px; right: 20px;
+      background: var(--orange-lt); color: var(--white);
+      font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 100px;
+    }
+    .essential-name {
+      font-size: 0.88rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gray-green); margin-bottom: 8px;
+    }
+    .essential-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.9rem; font-weight: 500; color: var(--charcoal); margin-bottom: 10px;
+    }
+    .essential-desc { font-size: 1rem; color: var(--text-mid); line-height: 1.65; margin-bottom: 24px; }
+    .price-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px; flex-wrap: nowrap; }
+    .price-amt {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.2rem; font-weight: 600; color: var(--gray-green-dk);
+      white-space: nowrap;
+    }
+    .price-unit { font-size: 0.82rem; color: var(--text-light); white-space: nowrap; }
+    .price-note { font-size: 0.78rem; color: var(--text-light); font-style: italic; }
+    /* Sig-grid: smaller price so it fits in narrow 5-col card */
+    .sig-grid .price-amt { font-size: clamp(1.3rem, 1.8vw, 1.7rem); }
+    .sig-grid .price-row { gap: 4px; }
+    .svc-meta-row {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .svc-meta-item {
+      font-size: 0.82rem; font-weight: 500; color: var(--gray-green-dk);
+      background: rgba(107,127,110,0.1);
+      padding: 4px 12px; border-radius: 100px;
+    }
+    /* Signature */
+    .signature-wrap {
+      background: var(--white); border-radius: var(--radius-md);
+      overflow: hidden; box-shadow: 0 2px 16px rgba(75,90,78,0.07);
+      border: 1px solid rgba(107,127,110,0.1);
+    }
+    .sig-header {
+      background: var(--gray-green); color: var(--cream);
+      padding: 28px 36px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .sig-header-label {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gray-green-lt); margin-bottom: 6px;
+    }
+    .sig-header-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.8rem; font-weight: 500;
+    }
+    .sig-header-desc { font-size: 0.85rem; color: rgba(245,240,232,0.8); margin-top: 4px; max-width: 480px; line-height: 1.55; }
+    .sig-header-note {
+      font-size: 0.8rem; color: var(--cream);
+      background: rgba(255,255,255,0.15);
+      padding: 8px 16px; border-radius: var(--radius-sm);
+      text-align: center; flex-shrink: 0;
+    }
+    .sig-header-note strong { display: block; font-size: 1.3rem; font-family: 'Cormorant Garamond', Georgia, serif; }
+    .sig-table { width: 100%; border-collapse: collapse; }
+    .sig-table thead th {
+      padding: 14px 24px;
+      background: rgba(107,127,110,0.06);
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--gray-green-dk);
+      text-align: left; border-bottom: 1px solid rgba(107,127,110,0.1);
+    }
+    .sig-table thead th:last-child { text-align: right; }
+    .sig-table tbody tr { border-bottom: 1px solid rgba(107,127,110,0.08); transition: var(--transition); }
+    .sig-table tbody tr:last-child { border-bottom: none; }
+    .sig-table tbody tr:hover { background: rgba(107,127,110,0.04); }
+    .sig-table td { padding: 13px 24px; font-size: 0.9rem; color: var(--charcoal); }
+    .sig-table td:last-child { text-align: right; font-weight: 500; color: var(--gray-green-dk); }
+    .sig-table td .item-no { font-size: 0.72rem; color: var(--text-light); margin-right: 8px; }
+    /* Signature category columns */
+    .sig-cat-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+      padding: 24px;
+    }
+    .sig-cat-card {
+      padding: 20px 18px;
+      border-right: 1px solid rgba(107,127,110,0.1);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .sig-cat-card:last-child { border-right: none; }
+    .sig-cat-featured { background: rgba(107,127,110,0.04); border-radius: var(--radius-sm); }
+    .sig-cat-price {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem; font-weight: 700;
+      color: var(--gray-green-dk); line-height: 1;
+    }
+    .sig-cat-price span {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem; font-weight: 400;
+      color: var(--text-light); margin-left: 4px;
+      vertical-align: middle;
+    }
+    .sig-cat-list {
+      list-style: none; padding: 0; margin: 0;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .sig-cat-list li {
+      font-size: 0.9rem; color: var(--charcoal);
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(107,127,110,0.07);
+      line-height: 1.4;
+    }
+    .sig-cat-list li:last-child { border-bottom: none; }
+
+    @media (max-width: 768px) {
+      .sig-cat-grid { grid-template-columns: repeat(2, 1fr); padding: 16px; }
+      .sig-cat-card { border-right: none; border-bottom: 1px solid rgba(107,127,110,0.1); }
+      .sig-cat-card:last-child { border-bottom: none; }
+    }
+    @media (max-width: 480px) {
+      .sig-cat-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Subscription */
+    .sub-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .sub-card {
+      background: var(--white); border-radius: var(--radius-md);
+      padding: 32px 24px;
+      border: 1px solid rgba(107,127,110,0.12);
+      box-shadow: 0 2px 16px rgba(75,90,78,0.07);
+      text-align: center; position: relative; overflow: hidden;
+      transition: var(--transition);
+    }
+    .sub-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+    .sub-card.popular { background: var(--gray-green); border-color: var(--gray-green); }
+    .sub-popular-tag {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      background: var(--orange-lt); color: var(--white);
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; padding: 4px 14px;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    }
+    .sub-plan {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase; margin-bottom: 6px; color: var(--gray-green);
+    }
+    .sub-card.popular .sub-plan { color: var(--gray-green-lt); }
+    .sub-name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem; font-weight: 500; color: var(--charcoal); margin-bottom: 20px;
+    }
+    .sub-card.popular .sub-name { color: var(--cream); }
+    .sub-quota {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 3rem; font-weight: 600; color: var(--gray-green-dk); line-height: 1;
+    }
+    .sub-card.popular .sub-quota { color: var(--cream); }
+    .sub-quota-unit { font-size: 0.82rem; color: var(--text-light); margin-bottom: 20px; }
+    .sub-card.popular .sub-quota-unit { color: rgba(245,240,232,0.7); }
+    .sub-divider { height: 1px; background: rgba(107,127,110,0.12); margin: 16px 0; }
+    .sub-card.popular .sub-divider { background: rgba(245,240,232,0.2); }
+    .sub-price {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.6rem; font-weight: 600; color: var(--charcoal);
+    }
+    .sub-card.popular .sub-price { color: var(--cream); }
+    .sub-per { font-size: 0.78rem; color: var(--text-light); }
+    .sub-card.popular .sub-per { color: rgba(245,240,232,0.7); }
+    .sub-tagline {
+      font-size: 0.82rem; color: var(--text-light); margin-bottom: 6px;
+    }
+    .sub-card.popular .sub-tagline { color: rgba(245,240,232,0.6); }
+    .sub-headline {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.35rem; font-weight: 600; line-height: 1.15;
+      color: var(--charcoal); margin-bottom: 4px;
+    }
+    .sub-card.popular .sub-headline { color: var(--cream); }
+    .sub-pitch {
+      font-size: 0.82rem; color: var(--text-mid); margin-bottom: 14px;
+    }
+    .sub-card.popular .sub-pitch { color: rgba(245,240,232,0.75); }
+    .sub-view-pkg {
+      display: inline-block; margin-top: 12px;
+      font-size: 0.82rem; font-weight: 600; color: var(--gray-green-dk);
+      letter-spacing: 0.03em; transition: var(--transition);
+    }
+    .sub-view-pkg:hover { color: var(--gray-green); }
+    .sub-card.popular .sub-view-pkg { color: var(--cream); opacity: 0.9; }
+    .sub-card.popular .sub-view-pkg:hover { opacity: 1; }
+
+    /* =============================================
+       HOW IT WORKS
+    ============================================= */
+    .how-section { background: var(--cream); position: relative; overflow: hidden; }
+    .how-orn {
+      position: absolute; bottom: 0; right: -40px;
+      opacity: 0.05; pointer-events: none; width: 220px;
+    }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+      position: relative;
+    }
+    .steps-grid::before {
+      content: '';
+      position: absolute; top: 36px; left: 12%; right: 12%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gray-green-lt), transparent);
+    }
+    .step { text-align: center; position: relative; }
+    .step-num {
+      width: 80px; height: 80px; border-radius: 50%;
+      border: 2px solid rgba(104,111,94,0.3);
+      background: #F6F2E7;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 16px rgba(104,111,94,0.12);
+      position: relative; z-index: 1;
+      padding: 10px;
+    }
+    .step-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.4rem; font-weight: 600; color: var(--charcoal); margin-bottom: 8px;
+    }
+    .step-text { font-size: 1rem; color: var(--text-mid); line-height: 1.65; }
+
+    /* =============================================
+       FOOTER CTA BANNER
+    ============================================= */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--gray-green) 0%, var(--gray-green-dk) 100%);
+      padding: 80px 0; position: relative; overflow: hidden; text-align: center;
+    }
+    .cta-banner-orn {
+      position: absolute; top: -40px; left: -60px;
+      width: 260px; opacity: 0.07; pointer-events: none;
+    }
+    .cta-banner-orn2 {
+      position: absolute; bottom: -30px; right: -40px;
+      width: 180px; opacity: 0.07; pointer-events: none;
+    }
+    .cta-banner h2 { color: var(--cream); margin-bottom: 18px; }
+    .cta-banner p { color: rgba(245,240,232,0.8); max-width: 480px; margin: 0 auto 36px; font-size: 0.97rem; line-height: 1.75; }
+    .btn-cta-banner {
+      display: inline-block; padding: 16px 44px;
+      background: var(--orange-lt); color: var(--white);
+      border-radius: var(--radius-sm);
+      font-family: 'Jost', sans-serif; font-size: 0.88rem;
+      font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      transition: var(--transition);
+    }
+    .btn-cta-banner:hover { background: var(--orange-warm); transform: translateY(-2px); }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    .footer { background: var(--charcoal); color: rgba(245,240,232,0.75); padding: 56px 0 32px; }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      gap: 48px; flex-wrap: wrap;
+      padding-bottom: 40px;
+      border-bottom: 1px solid rgba(245,240,232,0.1);
+      margin-bottom: 28px;
+    }
+    .footer-logo img { height: 100px; width: auto; filter: invert(1); opacity: 0.88; margin-bottom: 14px; mix-blend-mode: screen; }
+    .footer-tagline { font-size: 0.8rem; letter-spacing: 0.1em; }
+    .footer-col h4 {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(245,240,232,0.5); margin-bottom: 14px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-col ul li a { font-size: 0.88rem; color: rgba(245,240,232,0.75); transition: var(--transition); }
+    .footer-col ul li a:hover { color: var(--cream); }
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.78rem; color: rgba(245,240,232,0.4); flex-wrap: wrap; gap: 12px;
+    }
+
+    /* =============================================
+       POPUP / MODAL
+    ============================================= */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(46,46,42,0.6);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--white); border-radius: var(--radius-lg);
+      padding: 52px 44px 44px;
+      max-width: 440px; width: 100%; text-align: center;
+      position: relative;
+      animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85) translateY(20px); }
+      to   { opacity: 1; transform: scale(1)    translateY(0); }
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 20px;
+      background: none; border: none; cursor: pointer;
+      font-size: 1.3rem; color: var(--text-light); transition: var(--transition); line-height: 1;
+    }
+    .modal-close:hover { color: var(--charcoal); }
+    .modal-emoji { font-size: 3rem; margin-bottom: 20px; display: block; }
+    .modal-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2rem; font-weight: 600; color: var(--charcoal); margin-bottom: 14px;
+    }
+    .modal-body { font-size: 0.93rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 32px; }
+    .modal-body strong { color: var(--gray-green); }
+    .modal-btn {
+      display: inline-block; padding: 14px 40px;
+      background: var(--gray-green); color: var(--cream);
+      border: none; border-radius: var(--radius-sm);
+      font-family: 'Jost', sans-serif; font-size: 0.88rem;
+      font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: var(--transition);
+    }
+    .modal-btn:hover { background: var(--gray-green-dk); transform: translateY(-1px); }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
+    @media (max-width: 1024px) {
+      .values-grid { grid-template-columns: repeat(2, 1fr); }
+      .sub-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item:first-child { grid-column: span 2; }
+      .sig-grid { grid-template-columns: repeat(3, 1fr) !important; }
+    }
+    @media (max-width: 768px) {
+      .hero .container { grid-template-columns: 1fr; gap: 48px; }
+      .about-inner { grid-template-columns: 1fr; gap: 40px; }
+      .essential-grid { grid-template-columns: 1fr; }
+      .sig-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid::before { display: none; }
+      .values-grid { grid-template-columns: 1fr; }
+      .sub-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item:first-child { grid-column: span 1; aspect-ratio: 4/3; }
+      .footer-inner { flex-direction: column; }
+      .hero-subtitle { max-width: 100%; }
+      .sig-header { flex-direction: column; gap: 16px; }
+      .lead-card { padding: 32px 24px; }
+      .navbar-cta { display: none; }
+      .navbar-logo img { height: 72px; filter: brightness(0) invert(1); }
+      .hero-badges { max-width: 100%; }
+      .hero { padding-top: 110px; }
+      .offer-strip-inner { flex-wrap: wrap; gap: 12px; }
+      .hero-offers { max-width: 100%; }
+      .offer-strip-cta { margin-left: 0; }
+      .essential-tiers { grid-template-columns: 1fr; }
+      .essential-tier { border-right: none; border-bottom: 1px solid rgba(107,127,110,0.1); }
+      .essential-tier:last-child { border-bottom: none; }
+      .essential-single-header { padding: 0 0 20px 0; gap: 14px; }
+      .essential-tier { padding: 28px 24px; }
+      .sig-single-header { padding: 24px; flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .sub-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .modal { padding: 40px 24px 32px; }
+      .crew-stats { gap: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar">
+    <div class="container">
+      <a href="#" class="navbar-logo" aria-label="Ecolé home">
+        <img src="logo baru.png" alt="Ecolé Premium Laundry Care" />
+      </a>
+      <a href="#early-bird" class="navbar-cta">Join Early Bird</a>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO + LEAD FORM ==================== -->
+  <section class="hero" id="early-bird">
+
+    <!-- Floating laundry ornaments -->
+    <div class="hero-ornaments" aria-hidden="true">
+      <!-- Bubbles -->
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <div class="bubble"></div>
+      <!-- Hanger ornament top-right -->
+      <svg class="orn-hanger" viewBox="0 0 120 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 12 C60 12 52 12 52 20 C52 27 56 29 60 31 L12 68 Q8 70 12 74 L108 74 Q112 70 108 68 L66 32 C72 29 72 12 60 12 Z" stroke="#6B7F6E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M78 60 Q88 52 92 60 Q96 68 86 70" fill="#6B7F6E" opacity="0.6"/>
+      </svg>
+      <!-- Steam lines ornament -->
+      <svg class="orn-steam" width="80" height="120" viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 100 Q30 80 20 60 Q10 40 20 20" stroke="#6B7F6E" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M40 100 Q50 80 40 60 Q30 40 40 20" stroke="#6B7F6E" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M60 100 Q70 80 60 60 Q50 40 60 20" stroke="#6B7F6E" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </svg>
+      <!-- Dot grids -->
+      <div class="orn-dots"></div>
+      <div class="orn-dots-2"></div>
+    </div>
+
+    <div class="container">
+      <!-- Left: copy -->
+      <div>
+        <div class="hero-eyebrow"><span></span> Coming Soon to South Jakarta</div>
+        <h1 class="hero-title">Care that goes <em>beyond clean.</em></h1>
+        <p class="hero-subtitle">
+          Ecolé is a premium laundry service built around your skin, your schedule, and your peace of mind — with eco-conscious ingredients, flexible subscriptions, and seamless pickup &amp; delivery.
+        </p>
+        <div class="hero-badges">
+          <span class="badge">Skin-Friendly</span>
+          <span class="badge">Eco-Conscious</span>
+          <span class="badge">Pickup &amp; Delivery</span>
+          <span class="badge">Variative Scent</span>
+          <span class="badge badge-highlight">100% Transparent Ingredients</span>
+          <span class="badge badge-highlight">2× Quality Check</span>
+        </div>
+
+        <!-- Early-bird offers moved to strip below hero -->
+
+      </div>
+
+      <!-- Right: lead form -->
+      <div>
+        <div class="lead-card">
+          <!-- tiny hanger ornament inside card -->
+          <svg class="lead-card-orn" viewBox="0 0 80 74" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M40 8 C40 8 34 8 34 14 C34 19 37 20 40 22 L8 46 Q5 48 8 50 L72 50 Q75 48 72 46 L44 22 C48 20 48 8 40 8 Z" stroke="#6B7F6E" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M52 40 Q58 36 60 40 Q62 44 56 46" fill="#6B7F6E"/>
+          </svg>
+          <p class="lead-eyebrow">✦ Early Bird Access</p>
+          <h2 class="lead-title">Be the first<br/>to know.</h2>
+          <p class="lead-desc">Sign up now and receive an exclusive early-bird offer directly to your Instagram before we officially launch.</p>
+          <form id="leadForm" novalidate>
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" required />
+            </div>
+            <div class="form-group">
+              <label for="instagram">Instagram Username</label>
+              <div class="input-prefix">
+                <span>@</span>
+                <input type="text" id="instagram" name="instagram" placeholder="yourhandle" autocomplete="off" required />
+              </div>
+            </div>
+            <div class="form-privacy">
+              <input type="checkbox" id="privacy" name="privacy" required />
+              <label for="privacy">
+                I agree to Ecolé's <a href="#" onclick="return false;" title="We only use your data to contact you on Instagram with your early-bird offer. We never sell or share your information.">Privacy Policy</a>. By submitting, I consent to being contacted via Instagram with early-bird offers and launch updates.
+              </label>
+            </div>
+            <button type="submit" class="btn-submit">Secure My Early-Bird Spot</button>
+            <p class="form-note">We'll DM you on Instagram. <strong>No spam, ever.</strong></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== EARLY BIRD OFFER STRIP ==================== -->
+  <div class="offer-strip">
+    <div class="container">
+      <div class="offer-strip-inner">
+        <div class="hero-offers">
+          <div class="offer-card offer-primary">
+            <div class="offer-body">
+              <p class="offer-label">Early Bird Offer #1</p>
+              <p class="offer-number">20% OFF</p>
+              <p class="offer-subline">First order — all Ecolé services</p>
+            </div>
+            <span class="offer-tag">Limited</span>
+          </div>
+          <div class="offer-divider"><span>or</span></div>
+          <div class="offer-card offer-secondary">
+            <div class="offer-body">
+              <p class="offer-label">Early Bird Offer #2</p>
+              <p class="offer-number">Rp 75K OFF</p>
+              <p class="offer-subline">Subscription discount — early adopters only</p>
+            </div>
+            <span class="offer-tag">Exclusive</span>
+          </div>
+        </div>
+        <a href="#early-bird" class="offer-strip-cta">Claim Offer →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VALUE PROPOSITIONS ==================== -->
+  <section class="values-section section-pad">
+    <!-- laundry ornament -->
+    <svg class="values-orn" viewBox="0 0 160 180" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="10" y="30" width="140" height="140" rx="18" stroke="#6B7F6E" stroke-width="5"/>
+      <rect x="10" y="10" width="140" height="38" rx="10" stroke="#6B7F6E" stroke-width="5"/>
+      <circle cx="80" cy="112" r="42" stroke="#6B7F6E" stroke-width="5"/>
+      <circle cx="80" cy="112" r="24" stroke="#6B7F6E" stroke-width="3.5" stroke-dasharray="7 5"/>
+      <circle cx="30" cy="29" r="5" fill="#6B7F6E"/>
+      <circle cx="48" cy="29" r="5" fill="#6B7F6E"/>
+      <rect x="100" y="20" width="36" height="14" rx="7" stroke="#6B7F6E" stroke-width="3.5"/>
+    </svg>
+    <div class="container">
+      <div class="text-center">
+        <p class="section-label">Why Ecolé</p>
+        <h2 class="section-title">What sets us <em>apart.</em></h2>
+        <p class="section-subtitle">From skin-sensitive ingredients to seamless subscriptions, every detail is designed with your wellbeing in mind.</p>
+      </div>
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/02_gentle_on_skin.png" alt="Sensitive Skin–Friendly" /></div>
+          <p class="value-title">Sensitive Skin–Friendly</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/09_customizable_fragrance.png" alt="Variative Scent" /></div>
+          <p class="value-title">Variative Scent</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/05_sustainable_choice.png" alt="Sustainability" /></div>
+          <p class="value-title">Sustainability &amp; Peace of Mind</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/08_subscription_plan.png" alt="Convenience" /></div>
+          <p class="value-title">Convenience</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/04_safe_hygienic.png" alt="Protection" /></div>
+          <p class="value-title">Protection</p>
+        </div>
+        <div class="value-card">
+          <div class="value-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/07_easy_booking.png" alt="Online Booking" /></div>
+          <p class="value-title">Online Booking</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SERVICES ==================== -->
+  <section class="services-section section-pad" id="services">
+    <div class="svc-bubbles" aria-hidden="true"></div>
+    <div class="container">
+      <div class="text-center">
+        <p class="section-label">Our Services</p>
+        <h2 class="section-title">Tailored care for<br/><em>every garment.</em></h2>
+        <p class="section-subtitle">Three service lines, one philosophy: exceptional care for your clothes and your time.</p>
+      </div>
+      <div class="services-tabs">
+        <button class="tab-btn active" data-tab="essential">Ecolé Essential</button>
+        <button class="tab-btn" data-tab="signature">Ecolé Signature</button>
+        <button class="tab-btn" data-tab="subscription">Ecolé Subscription</button>
+      </div>
+
+      <!-- Essential -->
+      <div class="service-panel active" id="tab-essential">
+        <div class="essential-single">
+          <!-- Header -->
+          <div class="essential-single-header">
+            <div class="essential-single-icon">
+              <img src="Asset/ecole essentials.png" alt="Ecolé Essential" />
+            </div>
+            <div class="essential-single-header-text">
+              <p class="essential-name">Ecolé Essential</p>
+              <h3>Everyday Laundry, <em>Done Right.</em></h3>
+              <p>Regular washing, drying, and folding with convenient pickup &amp; delivery — handled with care.</p>
+            </div>
+          </div>
+          <!-- Two tiers side by side -->
+          <div class="essential-tiers">
+            <div class="essential-tier">
+              <div class="svc-icon"><img src="Asset/Regular washing, drying, and folding services.png" alt="Everyday" /></div>
+              <p class="tier-name">Everyday</p>
+              <p class="tier-desc">Regular washing, drying, and folding — perfect for everyday garments and household laundry.</p>
+              <div class="tier-divider"></div>
+              <div class="price-row">
+                <span class="price-amt">Rp 17K</span>
+                <span class="price-unit">/ kg</span>
+              </div>
+              <p class="price-note">Min. order 3 kg</p>
+              <div class="svc-meta-row" style="margin-top:14px;">
+                <span class="svc-meta-item">⏱ Ready in 2–3 business days</span>
+              </div>
+            </div>
+            <div class="essential-tier tier-featured">
+              <span class="tier-badge">Priority</span>
+              <div class="svc-icon" style="margin-top:8px;"><img src="Asset/Convenient pickup and delivery.png" alt="Priority" /></div>
+              <p class="tier-name">Priority</p>
+              <p class="tier-desc">Same trusted care with expedited processing — perfect for busy weeks and last-minute needs.</p>
+              <div class="tier-divider"></div>
+              <div class="price-row">
+                <span class="price-amt">Rp 34K</span>
+                <span class="price-unit">/ kg</span>
+              </div>
+              <p class="price-note">Min. order 3 kg</p>
+              <div class="svc-meta-row" style="margin-top:14px;">
+                <span class="svc-meta-item">⚡ Ready in 6 hours</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Signature -->
+      <div class="service-panel" id="tab-signature">
+        <!-- Single header -->
+        <div class="sig-single-header">
+          <div class="sig-single-icon">
+            <img src="Asset/ecole_15_icons_separate/03_premium_care.png" alt="Ecolé Signature" />
+          </div>
+          <div class="sig-single-header-text">
+            <p class="sig-eyebrow">Ecolé Signature</p>
+            <h3>Special Care by Item</h3>
+            <p>Suitable for selected clothing items and delicate fabrics — each piece treated with precision.</p>
+          </div>
+        </div>
+        <!-- 5 sub-type cards -->
+        <div class="sig-cards-wrap">
+
+          <div class="sig-type-card" style="padding-top:32px;">
+            <div class="sig-type-icon"><img src="Asset/ecole_15_icons_separate/15_neat_organized.png" alt="Everyday Wear" /></div>
+            <p class="sig-type-name">Everyday Wear</p>
+            <p class="sig-type-items">Shirt / T-Shirt, Blouse, Cardigan, Pants, Skirt, Shorts</p>
+            <p class="sig-type-price">Rp 33K <span>/ item</span></p>
+            <p class="sig-type-meta">⏱ 3–5 days &nbsp;·&nbsp; 6 types</p>
+          </div>
+
+          <div class="sig-type-card" style="padding-top:32px;">
+            <div class="sig-type-icon"><img src="Asset/ecole_15_icons_separate/03_premium_care.png" alt="Outerwear" /></div>
+            <p class="sig-type-name">Outerwear</p>
+            <p class="sig-type-items">Jacket</p>
+            <p class="sig-type-price">Rp 42K <span>/ item</span></p>
+            <p class="sig-type-meta">⏱ 3–5 days</p>
+          </div>
+
+          <div class="sig-type-card" style="padding-top:32px;">
+            <div class="sig-type-icon"><img src="Asset/ecole_15_icons_separate/14_long_lasting_freshness.png" alt="Casual Dress" /></div>
+            <p class="sig-type-name">Casual Dress</p>
+            <p class="sig-type-items">Casual Dress</p>
+            <p class="sig-type-price">Rp 52K <span>/ item</span></p>
+            <p class="sig-type-meta">⏱ 3–5 days</p>
+          </div>
+
+          <div class="sig-type-card" style="padding-top:32px;">
+            <div class="sig-type-icon"><img src="Asset/ecole_15_icons_separate/04_safe_hygienic.png" alt="Premium Pieces" /></div>
+            <p class="sig-type-name">Premium Pieces</p>
+            <p class="sig-type-items">Jeans, Formal / Long Dress, Coat, Suit</p>
+            <p class="sig-type-price">Rp 70K <span>/ item</span></p>
+            <p class="sig-type-meta">⏱ 3–5 days &nbsp;·&nbsp; 4 types</p>
+          </div>
+
+          <div class="sig-type-card sig-featured" style="padding-top:32px;">
+            <span class="sig-type-feat-tag">Premium</span>
+            <div class="sig-type-icon"><img src="Asset/ecole_15_icons_separate/13_our_care_promise.png" alt="Full-Set Suit" /></div>
+            <p class="sig-type-name">Full-Set Suit</p>
+            <p class="sig-type-items">Complete suit set — jacket, trousers &amp; vest</p>
+            <p class="sig-type-price">Rp 95K <span>/ set</span></p>
+            <p class="sig-type-meta">⏱ 3–5 days</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Subscription -->
+      <div class="service-panel" id="tab-subscription">
+        <div style="text-align:center; margin-bottom: 36px;">
+          <p style="font-size:1rem; color:var(--text-mid); max-width:560px; margin:0 auto; line-height:1.75;">
+            A monthly laundry quota with scheduled pickup &amp; delivery — predictable, effortless, and always on time. Completed within <strong>3 business days</strong>.
+          </p>
+        </div>
+        <div class="sub-grid">
+          <div class="sub-card">
+            <div class="sub-icon"><img src="Asset/ecole_15_icons_separate/11_time_saving.png" alt="Work-life" /></div>
+            <p class="sub-plan">Ecolé</p>
+            <p class="sub-name">Work-life</p>
+            <p class="sub-tagline">For busy professionals</p>
+            <p class="sub-headline">Find your balance.</p>
+            <p class="sub-pitch">Keep laundry off your plate.</p>
+            <p class="sub-quota">23</p>
+            <p class="sub-quota-unit">kg / month</p>
+            <div class="sub-divider"></div>
+            <p class="sub-price">Rp 375K</p>
+            <p class="sub-per">per month</p>
+            <a href="#early-bird" class="sub-view-pkg">View package →</a>
+          </div>
+          <div class="sub-card">
+            <div class="sub-icon"><img src="Asset/ecole_15_icons_separate/14_long_lasting_freshness.png" alt="Unwind" /></div>
+            <p class="sub-plan">Ecolé</p>
+            <p class="sub-name">Unwind</p>
+            <p class="sub-tagline">For your personal time</p>
+            <p class="sub-headline">Time to slow down.</p>
+            <p class="sub-pitch">Less chores, more you.</p>
+            <p class="sub-quota">30</p>
+            <p class="sub-quota-unit">kg / month</p>
+            <div class="sub-divider"></div>
+            <p class="sub-price">Rp 475K</p>
+            <p class="sub-per">per month</p>
+            <a href="#early-bird" class="sub-view-pkg">View package →</a>
+          </div>
+          <div class="sub-card popular">
+            <span class="sub-popular-tag">Most Popular</span>
+            <div class="sub-icon" style="margin-top:16px;"><img src="Asset/ecole_15_icons_separate/08_subscription_plan.png" alt="Leisure" style="filter:brightness(0) invert(1) opacity(0.9);" /></div>
+            <p class="sub-plan">Ecolé</p>
+            <p class="sub-name">Leisure</p>
+            <p class="sub-tagline">For the things you love</p>
+            <p class="sub-headline">Make room for more.</p>
+            <p class="sub-pitch">More time for what truly matters.</p>
+            <p class="sub-quota">40</p>
+            <p class="sub-quota-unit">kg / month</p>
+            <div class="sub-divider"></div>
+            <p class="sub-price">Rp 570K</p>
+            <p class="sub-per">per month</p>
+            <a href="#early-bird" class="sub-view-pkg">View package →</a>
+          </div>
+          <div class="sub-card">
+            <div class="sub-icon"><img src="Asset/ecole_15_icons_separate/05_sustainable_choice.png" alt="Libre" /></div>
+            <p class="sub-plan">Ecolé</p>
+            <p class="sub-name">Libre</p>
+            <p class="sub-tagline">For a more mindfree lifestyle</p>
+            <p class="sub-headline">Laundry off your mind.</p>
+            <p class="sub-pitch">Enjoy the freedom.</p>
+            <p class="sub-quota">70</p>
+            <p class="sub-quota-unit">kg / month</p>
+            <div class="sub-divider"></div>
+            <p class="sub-price">Rp 950K</p>
+            <p class="sub-per">per month</p>
+            <a href="#early-bird" class="sub-view-pkg">View package →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== HOW IT WORKS ==================== -->
+  <section class="how-section section-pad">
+    <!-- ironing board ornament -->
+    <svg class="how-orn" viewBox="0 0 200 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M10 40 Q50 15 190 40 L190 60 Q50 60 10 60 Z" stroke="#6B7F6E" stroke-width="5" stroke-linecap="round" fill="none"/>
+      <line x1="60" y1="60" x2="44" y2="92" stroke="#6B7F6E" stroke-width="5" stroke-linecap="round"/>
+      <line x1="140" y1="60" x2="156" y2="92" stroke="#6B7F6E" stroke-width="5" stroke-linecap="round"/>
+      <path d="M168 24 Q175 16 178 24 Q181 32 173 34" fill="#6B7F6E"/>
+      <path d="M174 24 Q180 18 182 24" stroke="#6B7F6E" stroke-width="2" fill="none"/>
+    </svg>
+    <div class="container">
+      <div class="text-center">
+        <p class="section-label">How It Works</p>
+        <h2 class="section-title">Laundry, <em>simplified.</em></h2>
+        <p class="section-subtitle" style="margin-bottom: 64px;">Four simple steps from your door to freshly laundered garments, back in your hands.</p>
+      </div>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-num"><img class="icon-img" src="Asset/book.png" alt="Step 1 – Book Online" /></div>
+          <p class="step-title">Book Online</p>
+          <p class="step-text">Schedule your pickup in minutes. Choose your preferred service, detergent, and fragrance.</p>
+        </div>
+        <div class="step">
+          <div class="step-num"><img class="icon-img" src="Asset/pickup.png" alt="Step 2 – We Pick Up" /></div>
+          <p class="step-title">We Pick Up</p>
+          <p class="step-text">Our team collects your laundry right at your door at the scheduled time. No hassle, no trips.</p>
+        </div>
+        <div class="step">
+          <div class="step-num"><img class="icon-img" src="Asset/care.png" alt="Step 3 – Expert Care" /></div>
+          <p class="step-title">Expert Care</p>
+          <p class="step-text">Handled with premium, skin-friendly detergents. Track every step of the process in real time.</p>
+        </div>
+        <div class="step">
+          <div class="step-num"><img class="icon-img" src="Asset/deliver.png" alt="Step 4 – We Deliver" /></div>
+          <p class="step-title">We Deliver</p>
+          <p class="step-text">Fresh, clean, and neatly packed — delivered back to your door. Right on time, every time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ABOUT / PHILOSOPHY ==================== -->
+  <section class="about-section section-pad">
+    <svg class="about-orn-machine" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="10" y="30" width="180" height="180" rx="20" stroke="#6B7F6E" stroke-width="6"/>
+      <rect x="10" y="10" width="180" height="40" rx="10" stroke="#6B7F6E" stroke-width="6"/>
+      <circle cx="100" cy="140" r="52" stroke="#6B7F6E" stroke-width="6"/>
+      <circle cx="100" cy="140" r="30" stroke="#6B7F6E" stroke-width="4" stroke-dasharray="8 6"/>
+      <circle cx="40" cy="30" r="6" fill="#6B7F6E"/>
+      <circle cx="60" cy="30" r="6" fill="#6B7F6E"/>
+      <rect x="130" y="22" width="44" height="16" rx="8" stroke="#6B7F6E" stroke-width="4"/>
+    </svg>
+    <div class="container">
+      <div class="about-inner">
+        <div>
+          <p class="about-label">Our Philosophy</p>
+          <h2 class="about-title">More than laundry.<br/>It's a <em>lifestyle.</em></h2>
+          <p class="about-body">
+            The name Ecolé is rooted in the word <em>Eco</em> — representing ecology, ecosystem, and ecological responsibility. The <em>-lé</em> ending adds an elegant, modern touch that positions us as a lifestyle brand, not just a laundry service.
+          </p>
+          <p class="about-body">
+            We believe every garment deserves thoughtful care — and so does the planet it's washed on.
+          </p>
+        </div>
+        <div class="pillars">
+          <div class="pillar">
+            <div class="pillar-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/01_eco_friendly.png" alt="Eco-Consciousness" /></div>
+            <div><p class="pillar-title">Eco-Consciousness</p></div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/13_our_care_promise.png" alt="Care" /></div>
+            <div><p class="pillar-title">Care</p></div>
+          </div>
+          <div class="pillar">
+            <div class="pillar-icon"><img class="icon-img" src="Asset/ecole_15_icons_separate/14_long_lasting_freshness.png" alt="Lifestyle" /></div>
+            <div><p class="pillar-title">Lifestyle</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER CTA ==================== -->
+  <section class="cta-banner">
+    <!-- machine ornament left -->
+    <svg class="cta-banner-orn" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="10" y="30" width="180" height="180" rx="20" stroke="#ffffff" stroke-width="6"/>
+      <rect x="10" y="10" width="180" height="40" rx="10" stroke="#ffffff" stroke-width="6"/>
+      <circle cx="100" cy="140" r="52" stroke="#ffffff" stroke-width="6"/>
+      <circle cx="100" cy="140" r="30" stroke="#ffffff" stroke-width="4" stroke-dasharray="8 6"/>
+      <circle cx="40" cy="30" r="6" fill="#ffffff"/>
+      <circle cx="60" cy="30" r="6" fill="#ffffff"/>
+      <rect x="130" y="22" width="44" height="16" rx="8" stroke="#ffffff" stroke-width="4"/>
+    </svg>
+    <!-- hanger ornament right -->
+    <svg class="cta-banner-orn2" viewBox="0 0 120 110" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M60 12 C60 12 52 12 52 20 C52 27 56 29 60 31 L12 68 Q8 70 12 74 L108 74 Q112 70 108 68 L66 32 C72 29 72 12 60 12 Z" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M78 60 Q88 52 92 60 Q96 68 86 70" fill="#ffffff" opacity="0.7"/>
+    </svg>
+    <div class="container">
+      <p class="section-label" style="color:var(--gray-green-lt);">Limited Early-Bird Spots</p>
+      <h2>Don't miss your early-bird<br/><em style="font-style:italic;">exclusive offer.</em></h2>
+      <p>Be the first to experience Ecolé. Sign up now and we'll personally reach out on Instagram with your exclusive pre-launch offer.</p>
+      <a href="#early-bird" class="btn-cta-banner">Secure My Spot</a>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div>
+          <div class="footer-logo">
+            <img src="logo baru.png" alt="Ecolé" />
+          </div>
+          <p class="footer-tagline">Care Beyond Clean.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#services">Ecolé Essential</a></li>
+            <li><a href="#services">Ecolé Signature</a></li>
+            <li><a href="#services">Ecolé Subscription</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">Our Philosophy</a></li>
+            <li><a href="#">Why Ecolé</a></li>
+            <li><a href="#">How It Works</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Ecolé Premium Laundry Care. All rights reserved.</span>
+        <span>South Jakarta, Indonesia</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== POPUP MODAL ==================== -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      <span class="modal-emoji">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="56" height="56">
+          <circle cx="32" cy="32" r="26" fill="#F6F2E7" stroke="#686F5E" stroke-width="2.2"/>
+          <path d="M20 33l8 8 16-16" stroke="#686F5E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M48 16L50 14M52 20H54M48 24L50 26" stroke="#86897B" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        </svg>
+      </span>
+      <h2 class="modal-title" id="modalTitle">You're on the list!</h2>
+      <p class="modal-body">
+        Thank you for signing up! We'll reach out to your <strong>Instagram</strong> with an exclusive early-bird offer before we officially launch.
+      </p>
+      <button class="modal-btn" id="modalBtn">Can't wait!</button>
+    </div>
+  </div>
+
+  <!-- ==================== SCRIPTS ==================== -->
+  <script>
+    // Smooth scroll with navbar offset
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        const navH = document.querySelector('.navbar').offsetHeight;
+        window.scrollTo({ top: target.offsetTop - navH - 16, behavior: 'smooth' });
+      });
+    });
+
+    // Service tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.service-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Lead form → Google Sheets → popup
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzf4fQT0_2B8XEWSF_PCQuIpCCsa1Ys7tqz8nE2rYhO0Yee9JJ8RauphLFp643UyeXaeA/exec';
+
+    const form     = document.getElementById('leadForm');
+    const overlay  = document.getElementById('modalOverlay');
+    const closeBtn = document.getElementById('modalClose');
+    const modalBtn = document.getElementById('modalBtn');
+    const submitBtn = form.querySelector('.btn-submit');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // ── Validation ──
+      let valid = true;
+      ['name', 'instagram'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) {
+          el.style.borderColor = 'var(--orange-warm)';
+          el.addEventListener('input', () => { el.style.borderColor = ''; }, { once: true });
+          valid = false;
+        }
+      });
+      const cb = document.getElementById('privacy');
+      if (!cb.checked) {
+        cb.style.outline = '2px solid var(--orange-warm)';
+        cb.addEventListener('change', () => { cb.style.outline = ''; }, { once: true });
+        valid = false;
+      }
+      if (!valid) return;
+
+      // ── Loading state ──
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting…';
+
+      // ── Send to Google Sheets ──
+      const params = new URLSearchParams({
+        name:      document.getElementById('name').value.trim(),
+        instagram: document.getElementById('instagram').value.trim(),
+        timestamp: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })
+      });
+
+      fetch(SHEET_URL + '?' + params.toString(), { method: 'GET', mode: 'no-cors' })
+        .then(() => {
+          // no-cors means we can't read the response, but the request was sent
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        })
+        .catch(() => {
+          // Show modal anyway — data likely still reached the sheet
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Secure My Early-Bird Spot';
+        });
+    });
+
+    function closeModal() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+      form.reset();
+    }
+    closeBtn.addEventListener('click', closeModal);
+    modalBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // Navbar scroll shadow
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+      navbar.style.boxShadow = window.scrollY > 20 ? '0 4px 24px rgba(75,90,78,0.1)' : 'none';
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
